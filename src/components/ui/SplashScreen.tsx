@@ -14,7 +14,12 @@ export function SplashScreen() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      onClick={() => !isLoading && exitSplash()}
+      onClick={() => {
+        if (!isLoading) {
+          AudioUtils.playTheme();
+          exitSplash();
+        }
+      }}
       className={`fixed inset-0 z-200 flex flex-col items-center justify-center bg-[#050505] p-6 overflow-hidden transition-all duration-700 ${
         isLoading ? "cursor-wait" : "cursor-pointer"
       }`}

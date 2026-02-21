@@ -1,6 +1,7 @@
 import { useGameStore, BOUNDARY_Z } from "../../store/gameStore";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
+import { Haptics } from "../../utils/haptics";
 
 export function Base() {
   const damageBase = useGameStore((state) => state.damageBase);
@@ -26,6 +27,7 @@ export function Base() {
               `Enemy ${enemyId} reached base! Dealing damage and removing.`,
             );
             damageBase(10);
+            Haptics.heavy();
             removeEnemy(enemyId, false); // No points for enemies reaching base
           }
         }}

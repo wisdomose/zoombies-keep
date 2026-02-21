@@ -8,6 +8,8 @@ import {
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useGameStore } from "../../store/gameStore";
 import { useModelPool } from "./ModelPool";
+import { Haptics } from "../../utils/haptics";
+import { AudioUtils } from "../../utils/audio";
 
 const MOVE_SPEED = 6;
 const REACH_Z = 30;
@@ -99,7 +101,10 @@ export const Enemy = React.memo(function Enemy({
       onCollisionEnter={({ other }) => {
         const name = other.rigidBodyObject?.name;
         if (name?.startsWith("ally-")) {
+          Haptics.light();
           handleAllyHit(name.replace("ally-", ""));
+        } else if (name?.startsWith("enemy-")) {
+          AudioUtils.playBump();
         }
       }}
     >

@@ -62,3 +62,8 @@ pnpm build
 ---
 
 _Defend the town from the eternal sleep._
+
+**Credits:**
+
+- Assets from **Keenly**
+- Sound from **Zapsplat**
