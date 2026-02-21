@@ -9,7 +9,7 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { useGameStore } from "../../store/gameStore";
 import { useModelPool } from "./ModelPool";
 
-const MOVE_SPEED = 4;
+const MOVE_SPEED = 6;
 const REACH_Z = 30;
 const FALL_Y = -5;
 const ALLY_DAMAGE = 3;

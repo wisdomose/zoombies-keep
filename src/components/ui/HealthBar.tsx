@@ -19,7 +19,7 @@ export function HealthBar({ current, max }: HealthBarProps) {
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl w-full md:grow md:max-w-[280px]"
+      className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl w-full md:grow md:max-w-70"
     >
       <div className="flex justify-between items-end gap-4">
         <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-bold whitespace-nowrap">

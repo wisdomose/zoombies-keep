@@ -48,7 +48,7 @@ export const Ally = React.memo(function Ally({
   useFrame(() => {
     if (rbRef.current) {
       // Allies move towards negative Z (towards enemy spawn)
-      rbRef.current.setLinvel({ x: 0, y: 0, z: -5 }, true);
+      rbRef.current.setLinvel({ x: 0, y: 0, z: -8 }, true);
 
       const pos = rbRef.current.translation();
       if (pos.z < -BOUNDARY_Z - 10) {

@@ -13,7 +13,7 @@ export function GameOverOverlay() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[100] p-6"
+        className="absolute inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-100 p-6"
       >
         <motion.div
           initial={{ scale: 0.9, y: 20, opacity: 0 }}

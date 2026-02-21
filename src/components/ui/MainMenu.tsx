@@ -8,9 +8,9 @@ export function MainMenu() {
   const [showInstructions, setShowInstructions] = useState(false);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
       {/* Background Glows (Moved outside card to prevent clipping) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-[400px] pointer-events-none">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md h-100 pointer-events-none">
         <div className="absolute -top-24 -left-24 w-64 h-64 bg-purple-500/30 blur-[100px]" />
         <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/30 blur-[100px]" />
       </div>
@@ -73,7 +73,7 @@ export function MainMenu() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/80 backdrop-blur-xl p-4"
+            className="fixed inset-0 z-110 flex items-center justify-center bg-black/80 backdrop-blur-xl p-4"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../store/gameStore";
-import { Zap, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useProgress } from "@react-three/drei";
 
 export function SplashScreen() {
@@ -15,13 +15,13 @@ export function SplashScreen() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={() => !isLoading && exitSplash()}
-      className={`fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#050505] transition-all duration-700 ${
+      className={`fixed inset-0 z-200 flex flex-col items-center justify-center bg-[#050505] p-6 overflow-hidden transition-all duration-700 ${
         isLoading ? "cursor-wait" : "cursor-pointer"
       }`}
     >
       {/* Background Ambience */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-600/10 blur-[120px] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-purple-600/10 blur-[120px] rounded-full" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm text-center">

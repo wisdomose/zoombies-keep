@@ -13,12 +13,12 @@ import { useGameStore, BOUNDARY_X, BOUNDARY_Z } from "../../store/gameStore";
 import { ContactShadows } from "@react-three/drei";
 import { ModelPoolProvider } from "./ModelPool";
 
-const SPAWN_DELAY_NORMAL_MS = 1500;
-const SPAWN_DELAY_BOSS_MS = 2500;
+const SPAWN_DELAY_NORMAL_MS = 1000;
+const SPAWN_DELAY_BOSS_MS = 1800;
 const NORMAL_PHASE_DURATION_MS = 20_000;
 const BOSS_PHASE_DURATION_MS = 10_000;
-const SPEED_INCREMENT_PER_WAVE = 0.15;
-const SPAWN_DELAY_DECAY_RATE = 0.85;
+const SPEED_INCREMENT_PER_WAVE = 0.2;
+const SPAWN_DELAY_DECAY_RATE = 0.8;
 const MIN_NORMAL_SPAWN_DELAY_MS = 500;
 const MIN_BOSS_SPAWN_DELAY_MS = 1000;
 
@@ -63,12 +63,21 @@ export function GameScene() {
           SPAWN_DELAY_BOSS_MS * Math.pow(SPAWN_DELAY_DECAY_RATE, waveLevel - 1),
         );
 
-        const randomX = (Math.random() - 0.5) * BOUNDARY_X * 0.8;
-        spawnEnemy([randomX, 0.05, -BOUNDARY_Z - 8], {
-          isBoss: inBossPhase,
-          speedMultiplier,
-          waveLevel,
-        });
+        const spawnCount = inBossPhase
+          ? 1
+          : Math.min(10, 8 + Math.floor(waveLevel / 2));
+
+        for (let i = 0; i < spawnCount; i++) {
+          const randomX = (Math.random() - 0.5) * BOUNDARY_X * 0.9;
+          // Add small random offset to Z to prevent perfect overlap if many spawn
+          const zOffset = (Math.random() - 0.5) * 2;
+
+          spawnEnemy([randomX, 0.05, -BOUNDARY_Z - 8 + zOffset], {
+            isBoss: inBossPhase,
+            speedMultiplier,
+            waveLevel,
+          });
+        }
 
         const delay = inBossPhase ? bossDelay : normalDelay;
         await new Promise<void>((resolve) => setTimeout(resolve, delay));

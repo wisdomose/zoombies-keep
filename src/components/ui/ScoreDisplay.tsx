@@ -25,7 +25,7 @@ export function ScoreDisplay({ score }: ScoreDisplayProps) {
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl ml-auto md:ml-0 max-w-[180px] min-w-0"
+      className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl ml-auto md:ml-0 max-w-45 min-w-0"
     >
       <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-bold">
         Total Score

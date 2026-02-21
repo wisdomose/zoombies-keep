@@ -15,7 +15,7 @@ function Home() {
   const status = useGameStore((state) => state.status);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#050505]">
+    <div className="relative w-full h-dvh overflow-hidden bg-[#050505]">
       {/* 3D Game Canvas */}
       <GameScene />
 
