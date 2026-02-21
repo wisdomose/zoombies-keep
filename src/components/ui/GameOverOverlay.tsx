@@ -40,8 +40,8 @@ export function GameOverOverlay() {
           </div>
 
           <div className="w-full grid grid-cols-2 gap-4">
-            <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-1">
-              <Target className="w-5 h-5 text-red-500 mb-2 opacity-50" />
+            <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-1 text-center">
+              <Target className="w-5 h-5 text-red-500 mb-2 opacity-50 mx-auto" />
               <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold">
                 Final Score
               </span>
@@ -49,8 +49,8 @@ export function GameOverOverlay() {
                 {score}
               </span>
             </div>
-            <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-1">
-              <Trophy className="w-5 h-5 text-yellow-500 mb-2 opacity-50" />
+            <div className="bg-white/5 border border-white/5 rounded-2xl p-6 flex flex-col items-center gap-1 text-center">
+              <Trophy className="w-5 h-5 text-yellow-500 mb-2 opacity-50 mx-auto" />
               <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold">
                 Best Score
               </span>

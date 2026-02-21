@@ -65,7 +65,7 @@ export function GameScene() {
 
         const spawnCount = inBossPhase
           ? 1
-          : Math.min(10, 8 + Math.floor(waveLevel / 2));
+          : Math.min(5, 2 + Math.floor(waveLevel / 2));
 
         for (let i = 0; i < spawnCount; i++) {
           const randomX = (Math.random() - 0.5) * BOUNDARY_X * 0.9;
