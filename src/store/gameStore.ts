@@ -36,7 +36,8 @@ interface GameState {
     allies: Ally[]
     enemies: Enemy[]
     zones: MultiplierZone[]
-    status: 'menu' | 'playing' | 'gameover'
+    status: 'splash' | 'menu' | 'playing' | 'gameover'
+    exitSplash: () => void
     spawnAlly: (position: [number, number, number], canMultiply?: boolean) => void
     spawnEnemy: (position: [number, number, number], options?: SpawnEnemyOptions) => void
     removeAlly: (id: string) => void
@@ -82,7 +83,7 @@ export const useGameStore = create<GameState>()(
             { id: 'zone-1', position: [0, 0.5, 0], multiplier: 2, width: 6 },
             { id: 'zone-2', position: [0, 0.5, -10], multiplier: 2, width: 4 }
         ],
-        status: 'menu',
+        status: 'splash',
 
         spawnAlly: (position, canMultiply = true) => set((state) => ({
             allies: [...state.allies, { id: crypto.randomUUID(), position, strength: 3, canMultiply }]
@@ -145,6 +146,13 @@ export const useGameStore = create<GameState>()(
                 enemies: state.enemies.filter((e) => e.id !== id),
                 score: incrementScore && enemy ? state.score + getEnemyScore(enemy) : state.score,
             }
+        }),
+
+        exitSplash: () => set((state) => {
+            if (state.status === 'splash') {
+                return { status: 'menu' }
+            }
+            return state
         }),
 
         damageBase: (amount) => set((state) => {
