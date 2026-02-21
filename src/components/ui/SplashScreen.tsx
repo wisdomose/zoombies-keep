@@ -21,7 +21,7 @@ export function SplashScreen() {
           exitSplash();
         }
       }}
-      className={`fixed inset-0 z-200 flex flex-col items-center justify-center bg-[#050505] p-6 overflow-hidden transition-all duration-700 ${
+      className={`fixed inset-0 z-200 flex flex-col items-center justify-center bg-[#050505] p-6 overflow-hidden select-none transition-all duration-700 ${
         isLoading ? "cursor-wait" : "cursor-pointer"
       }`}
     >
