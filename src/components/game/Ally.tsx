@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
   RigidBody,
@@ -6,29 +6,31 @@ import {
   CuboidCollider,
 } from "@react-three/rapier";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { useMemo, useEffect } from "react";
 import { BOUNDARY_Z, useGameStore } from "../../store/gameStore";
+import { useModelPool } from "./ModelPool";
 
-export function Ally({
+export const Ally = React.memo(function Ally({
   id,
   position,
+  strength,
 }: {
   id: string;
   position: [number, number, number];
+  strength: number;
 }) {
   const rbRef = useRef<RapierRigidBody>(null);
   const groupRef = useRef<any>(null);
   const removeAlly = useGameStore((state) => state.removeAlly);
-  const ally = useGameStore((state) => state.allies.find((a) => a.id === id));
-  const prevStrength = useRef(ally?.strength || 3);
+  const prevStrength = useRef(strength);
+  const pool = useModelPool();
 
-  const { scene, animations } = useGLTF(
+  const { animations } = useGLTF(
     "/assets/Models/GLB%20format/character-ghost.glb",
   ) as any;
 
-  // Clone the scene for independent animations
-  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  // Get model from pool
+  const clone = useMemo(() => pool.getGhost(), [pool]);
   const { actions, names } = useAnimations(animations, clone);
 
   useEffect(() => {
@@ -66,9 +68,9 @@ export function Ally({
       groupRef.current.scale.lerp({ x: 3, y: 3, z: 3 }, 0.1);
 
       // If strength dropped, pop scale
-      if (ally && ally.strength < prevStrength.current) {
+      if (strength < prevStrength.current) {
         groupRef.current.scale.set(4.5, 4.5, 4.5);
-        prevStrength.current = ally.strength;
+        prevStrength.current = strength;
       }
     }
   });
@@ -88,6 +90,6 @@ export function Ally({
       </group>
     </RigidBody>
   );
-}
+});
 
 useGLTF.preload("/assets/Models/GLB%20format/character-ghost.glb");
