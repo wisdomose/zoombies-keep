@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../store/gameStore";
 import { Loader2 } from "lucide-react";
 import { useProgress } from "@react-three/drei";
+import { AudioUtils } from "../../utils/audio";
 
 export function SplashScreen() {
   const exitSplash = useGameStore((state) => state.exitSplash);

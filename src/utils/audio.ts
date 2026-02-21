@@ -15,7 +15,7 @@ export const AudioUtils = {
 
         bumpCooldown = now;
         const audio = new Audio("/assets/audio/bump.mp3");
-        audio.volume = 0.4;
+        audio.volume = 0.8;
         audio.play().catch(() => {
             /* Ignore autoplay restrictions errors */
         });
@@ -29,7 +29,7 @@ export const AudioUtils = {
 
         themeAudio = new Audio("/assets/audio/theme.mp3");
         themeAudio.loop = true;
-        themeAudio.volume = 0.5;
+        themeAudio.volume = 0.15;
         themeAudio.play().catch(() => {
             /* Autoplay often requires user interaction first */
             console.warn("Theme music failed to play. Interaction required.");
