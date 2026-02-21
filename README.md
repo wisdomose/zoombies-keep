@@ -1,8 +1,8 @@
-# GHOST DEFENSE
+# ZOOMBIE KEEP
 
-**Ghost Defense** is a 3D tower defense-style web game built with React, Three.js, and Rapier Physics. Protect the town center graveyard from an endless horde of vampires!
+**Zoombie Keep** is a 3D tower defense-style web game built with React, Three.js, and Rapier Physics. Protect the town center graveyard from an endless horde of vampires!
 
-![Ghost Defense](public/favicon.ico) <!-- Placeholder if you want to add an image later -->
+![Zoombie Keep](public/zoombies-keep.jpg)
 
 ## 🎮 Gameplay
 

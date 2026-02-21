@@ -21,7 +21,7 @@ export function MainMenu() {
         className="w-full max-w-md p-8 rounded-3xl bg-zinc-900/80 border border-zinc-800 shadow-2xl text-center relative"
       >
         <h1 className="text-5xl font-black text-white mb-2 italic flex flex-wrap justify-center gap-x-2">
-          GHOST <span className="text-purple-500">DEFENSE</span>
+          ZOOMBIE <span className="text-purple-500">KEEP</span>
         </h1>
         <p className="text-zinc-400 mb-8 font-medium">
           Protect the town from the eternal sleep
