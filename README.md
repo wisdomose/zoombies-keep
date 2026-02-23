@@ -9,11 +9,6 @@
 - **Objective:** Defend the base from incoming vampires. If too many reach the center, base integrity drops. If it reaches `0`, the game ends.
 - **Core loop:** Launch and guide your ghost swarm, pass through the glowing **green multiplier zones**, and grow your forces to hold the line.
 
-### Controls
-
-- **Shoot / Deploy:** `Space` or `Left Mouse Click`
-- **Steer / Move swarm:** `Mouse Movement` or `Click + Drag`
-
 ## 🛠️ Tech Stack
 
 - **Framework:** React + [TanStack Start](https://tanstack.com/start)
