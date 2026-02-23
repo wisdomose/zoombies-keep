@@ -7,6 +7,7 @@ import { MainMenu } from "../components/ui/MainMenu";
 import { SplashScreen } from "../components/ui/SplashScreen";
 import { AnimatePresence } from "framer-motion";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { PauseMenu } from "../components/ui/PauseMenu";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -27,6 +28,7 @@ function Home() {
           {status === "menu" && <MainMenu key="menu" />}
           {status === "playing" && <HUD key="hud" />}
         </AnimatePresence>
+        <PauseMenu />
         <GameOverOverlay />
       </div>
     </ErrorBoundary>

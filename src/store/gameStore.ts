@@ -43,6 +43,8 @@ interface GameState {
     allies: Ally[]
     enemies: Enemy[]
     zones: MultiplierZone[]
+    level: number
+    isPaused: boolean
     status: 'splash' | 'menu' | 'playing' | 'gameover'
     dismissSplash: () => void
     spawnAlly: (position: [number, number, number], canMultiply?: boolean) => void
@@ -54,6 +56,8 @@ interface GameState {
     damageBase: (amount: number) => void
     resetGame: () => void
     startGame: () => void
+    togglePause: (force?: boolean) => void
+    setLevel: (level: number) => void
 }
 
 const INITIAL_HEALTH = 100
@@ -93,6 +97,8 @@ export const useGameStore = create<GameState>()(
         baseHealth: INITIAL_HEALTH,
         score: 0,
         highScore: getHighScore(),
+        level: 1,
+        isPaused: false,
         allies: [],
         enemies: [],
         zones: [
@@ -195,6 +201,8 @@ export const useGameStore = create<GameState>()(
         resetGame: () => set({
             baseHealth: INITIAL_HEALTH,
             score: 0,
+            level: 1,
+            isPaused: false,
             allies: [],
             enemies: [],
             status: 'menu',
@@ -203,9 +211,17 @@ export const useGameStore = create<GameState>()(
         startGame: () => set({
             baseHealth: INITIAL_HEALTH,
             score: 0,
+            level: 1,
+            isPaused: false,
             allies: [],
             enemies: [],
             status: 'playing',
         }),
+
+        togglePause: (force) => set((state) => ({
+            isPaused: force !== undefined ? force : !state.isPaused
+        })),
+
+        setLevel: (level) => set({ level }),
     }))
 )

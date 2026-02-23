@@ -26,9 +26,40 @@ import {
 } from "../../constants/game";
 
 export function GameScene() {
-  const { allies, enemies, spawnEnemy, status } = useGameStore();
+  const {
+    allies,
+    enemies,
+    spawnEnemy,
+    status,
+    isPaused,
+    togglePause,
+    setLevel,
+  } = useGameStore();
 
   const fog = useMemo(() => new Fog("#050505", 50, 150), []);
+
+  // Keyboard controls & Visibility listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && status === "playing") {
+        togglePause();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && status === "playing") {
+        togglePause(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [status, togglePause]);
 
   useEffect(() => {
     if (status !== "playing") return;
@@ -40,6 +71,13 @@ export function GameScene() {
 
     async function spawnLoop() {
       while (isRunning) {
+        // Handle Pause
+        if (isPaused) {
+          await new Promise<void>((resolve) => setTimeout(resolve, 100));
+          lastPhaseSwitch += 100; // Shift time to avoid instant phase switch on resume
+          continue;
+        }
+
         const now = Date.now();
         const elapsedSinceSwitch = now - lastPhaseSwitch;
 
@@ -50,6 +88,7 @@ export function GameScene() {
           inBossPhase = false;
           lastPhaseSwitch = now;
           waveLevel++;
+          setLevel(waveLevel); // Sync level to store
         }
 
         const speedMultiplier = 1 + waveLevel * SPEED_INCREMENT_PER_WAVE;
@@ -69,7 +108,6 @@ export function GameScene() {
 
         for (let i = 0; i < spawnCount; i++) {
           const randomX = (Math.random() - 0.5) * BOUNDARY_X * 0.9;
-          // Add small random offset to Z to prevent perfect overlap if many spawn
           const zOffset = (Math.random() - 0.5) * 2;
 
           spawnEnemy([randomX, 0.05, -BOUNDARY_Z - 8 + zOffset], {
@@ -91,7 +129,7 @@ export function GameScene() {
     return () => {
       isRunning = false;
     };
-  }, [status, spawnEnemy]);
+  }, [status, spawnEnemy, isPaused, setLevel]);
 
   return (
     <Canvas
@@ -115,7 +153,7 @@ export function GameScene() {
             castShadow
             shadow-mapSize={[1024, 1024]}
           />
-          <Physics gravity={[0, -9.81, 0]}>
+          <Physics gravity={[0, -9.81, 0]} paused={isPaused}>
             <Environment />
             <TownEnvironment />
             <Graveyard />
