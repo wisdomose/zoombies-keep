@@ -12,7 +12,7 @@ export function LevelDisplay({ level }: LevelDisplayProps) {
       className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col gap-1 shadow-2xl"
     >
       <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-bold">
-        Sector Level
+        Level
       </span>
       <motion.span
         key={level}
@@ -20,7 +20,7 @@ export function LevelDisplay({ level }: LevelDisplayProps) {
         animate={{ scale: 1, color: "#ffffff" }}
         className="text-2xl font-black tabular-nums leading-none"
       >
-        L-{level.toString().padStart(2, "0")}
+        LEVEL {level}
       </motion.span>
     </motion.div>
   );

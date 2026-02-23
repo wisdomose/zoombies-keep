@@ -183,17 +183,27 @@ export const useGameStore = create<GameState>()(
             const newHealth = Math.max(0, state.baseHealth - amount)
             const isGameOver = newHealth === 0
 
+            const gameOverState = {
+                baseHealth: newHealth,
+                status: 'gameover' as const,
+                allies: [],
+                enemies: [],
+                isPaused: false,
+            }
+
             if (isGameOver && state.score > state.highScore) {
                 saveHighScore(state.score)
                 return {
-                    baseHealth: newHealth,
-                    status: 'gameover',
+                    ...gameOverState,
                     highScore: state.score,
                 }
             }
 
             return {
                 baseHealth: newHealth,
+                allies: isGameOver ? [] : state.allies,
+                enemies: isGameOver ? [] : state.enemies,
+                isPaused: isGameOver ? false : state.isPaused,
                 status: isGameOver ? 'gameover' : 'playing',
             }
         }),
