@@ -1,5 +1,6 @@
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useTexture } from "@react-three/drei";
 import { useMemo } from "react";
+import { RepeatWrapping } from "three";
 import { BOUNDARY_X, BOUNDARY_Z } from "../../store/gameStore";
 
 function getMeshInfo(nodes: any, materials: any, fallbackName: string) {
@@ -17,7 +18,7 @@ export function TownEnvironment() {
   ) as any;
   const benchGltf = useGLTF("/assets/Models/GLB%20format/bench.glb") as any;
   const urnGltf = useGLTF("/assets/Models/GLB%20format/urn-round.glb") as any;
-  const roadGltf = useGLTF("/assets/Models/GLB%20format/road.glb") as any;
+
   const pillarGltf = useGLTF(
     "/assets/Models/GLB%20format/pillar-square.glb",
   ) as any;
@@ -25,6 +26,16 @@ export function TownEnvironment() {
     "/assets/Models/GLB%20format/crypt-large.glb",
   ) as any;
   const rocksGltf = useGLTF("/assets/Models/GLB%20format/rocks.glb") as any;
+  const roadTexture = useTexture("/assets/textures/road.png");
+
+  // Configure road texture
+  useMemo(() => {
+    roadTexture.wrapS = roadTexture.wrapT = RepeatWrapping;
+    // Calculate repeat based on road dimensions to keep texture square
+    // Width is BOUNDARY_X * 2.4 (24 units), Height is 4 units
+    // Target: ~1.5 units per texture tile
+    roadTexture.repeat.set(16, 3);
+  }, [roadTexture]);
 
   const wall = getMeshInfo(wallGltf.nodes, wallGltf.materials, "brick-wall");
   const light = getMeshInfo(
@@ -34,7 +45,7 @@ export function TownEnvironment() {
   );
   const bench = getMeshInfo(benchGltf.nodes, benchGltf.materials, "bench");
   const urn = getMeshInfo(urnGltf.nodes, urnGltf.materials, "urn-round");
-  const road = getMeshInfo(roadGltf.nodes, roadGltf.materials, "road");
+
   const pillar = getMeshInfo(
     pillarGltf.nodes,
     pillarGltf.materials,
@@ -63,16 +74,22 @@ export function TownEnvironment() {
   return (
     <group>
       {/* Central Road */}
-      <group position={[0, -0.45, 0]}>
+      <group position={[0, 0.08, 0]}>
         {Array.from({ length: 12 }).map((_, i) => (
           <mesh
             key={`road-${i}`}
             position={[0, 0, -BOUNDARY_Z + i * 4]}
-            geometry={road.geometry}
-            material={road.material}
-            scale={[BOUNDARY_X / 2.5, 1, 1]}
+            rotation={[-Math.PI / 2, 0, 0]}
             receiveShadow
-          />
+          >
+            <planeGeometry args={[BOUNDARY_X * 2.4, 4]} />
+            <meshStandardMaterial
+              map={roadTexture}
+              color="#bbbbbb"
+              roughness={0.7}
+              metalness={0.1}
+            />
+          </mesh>
         ))}
       </group>
 
@@ -195,7 +212,7 @@ useGLTF.preload("/assets/Models/GLB%20format/brick-wall.glb");
 useGLTF.preload("/assets/Models/GLB%20format/lightpost-single.glb");
 useGLTF.preload("/assets/Models/GLB%20format/bench.glb");
 useGLTF.preload("/assets/Models/GLB%20format/urn-round.glb");
-useGLTF.preload("/assets/Models/GLB%20format/road.glb");
+
 useGLTF.preload("/assets/Models/GLB%20format/pillar-square.glb");
 useGLTF.preload("/assets/Models/GLB%20format/crypt-large.glb");
 useGLTF.preload("/assets/Models/GLB%20format/rocks.glb");

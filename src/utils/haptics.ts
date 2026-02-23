@@ -9,7 +9,7 @@ export const Haptics = {
      */
     light: () => {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
-            navigator.vibrate(15);
+            navigator.vibrate(30);
         }
     },
 
@@ -18,7 +18,7 @@ export const Haptics = {
      */
     heavy: () => {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
-            navigator.vibrate([40, 20, 40]);
+            navigator.vibrate([80, 50, 80]);
         }
     },
 

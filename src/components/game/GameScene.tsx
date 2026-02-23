@@ -1,4 +1,5 @@
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useMemo } from "react";
+import { PCFShadowMap, Fog } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { Environment } from "./Environment";
@@ -25,6 +26,8 @@ const MIN_BOSS_SPAWN_DELAY_MS = 1000;
 export function GameScene() {
   const { allies, enemies, spawnEnemy, status } = useGameStore();
   const [isClient, setIsClient] = useState(false);
+
+  const fog = useMemo(() => new Fog("#050505", 50, 150), []);
 
   useEffect(() => {
     setIsClient(true);
@@ -95,7 +98,7 @@ export function GameScene() {
 
   return (
     <Canvas
-      shadows
+      shadows={{ type: PCFShadowMap }}
       camera={{
         position: [0, 50, 60],
         fov: 40,
@@ -107,7 +110,7 @@ export function GameScene() {
     >
       <Suspense fallback={null}>
         <ModelPoolProvider>
-          <fog attach="fog" args={["#050505", 50, 150]} />
+          <primitive object={fog} attach="fog" />
           <ambientLight intensity={1.2} />
           <directionalLight
             position={[10, 30, 20]}

@@ -15,8 +15,17 @@ const config = defineConfig({
     viteReact(),
     netlify(),
   ],
+  optimizeDeps: {
+    include: ['detect-gpu'],
+  },
   ssr: {
-    noExternal: ['three', '@react-three/fiber', '@react-three/drei', '@react-three/rapier'],
+    noExternal: [
+      'three',
+      '@react-three/fiber',
+      '@react-three/drei',
+      '@react-three/rapier',
+      'detect-gpu',
+    ],
   },
 })
 

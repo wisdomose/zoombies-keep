@@ -45,5 +45,54 @@ export const AudioUtils = {
             themeAudio.pause();
             themeAudio = null;
         }
+    },
+
+    /**
+     * Pauses the theme music without clearing the instance.
+     */
+    pauseTheme: () => {
+        if (themeAudio && !themeAudio.paused) {
+            themeAudio.pause();
+        }
+    },
+
+    /**
+     * Resumes the theme music if it was paused.
+     */
+    resumeTheme: () => {
+        if (themeAudio && themeAudio.paused) {
+            themeAudio.play().catch(() => {
+                /* Playback might fail if user hasn't interacted with the page yet */
+            });
+        }
+    },
+
+    /**
+     * Complete cleanup of all audio resources.
+     */
+    cleanup: () => {
+        AudioUtils.stopTheme();
     }
 };
+
+let wasPlayingBeforeHide = false;
+
+// Handle cleanup when the page is closed or navigation happens
+if (typeof window !== "undefined") {
+    window.addEventListener("pagehide", () => {
+        AudioUtils.stopTheme();
+    });
+
+    // Handle visibility change to pause music when tab is hidden and resume when shown
+    window.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+            // Track if it was playing so we know whether to resume
+            wasPlayingBeforeHide = themeAudio !== null && !themeAudio.paused;
+            AudioUtils.pauseTheme();
+        } else if (document.visibilityState === "visible") {
+            if (wasPlayingBeforeHide) {
+                AudioUtils.resumeTheme();
+            }
+        }
+    });
+}
