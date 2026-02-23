@@ -1,69 +1,69 @@
-# ZOOMBIE KEEP
+# Zoombies Keep
 
-**Zoombie Keep** is a 3D tower defense-style web game built with React, Three.js, and Rapier Physics. Protect the town center graveyard from an endless horde of vampires!
+**Zoombies Keep** is a 3D tower-defense-inspired web game built with React, Three.js, and Rapier physics. Protect the town center graveyard from an endless horde of vampires.
 
-![Zoombie Keep](public/zoombies-keep.jpg)
+![Zoombies Keep gameplay screenshot](public/zoombies-keep.jpg)
 
 ## 🎮 Gameplay
 
-- **Objective:** Defend the base from incoming vampires. If too many reach the base, its integrity will drop. If it reaches 0, the game is over.
-- **Controls:**
-  - **Shoot/Deploy:** `Spacebar` or `Mouse Click`
-  - **Steer/Move:** `Mouse Movement` or `Click & Drag`
-- **Mechanics:** Guide your deployed ghosts through the glowing **Green Multiplier Zones** to increase your swarm size and overpower the enemies!
+- **Objective:** Defend the base from incoming vampires. If too many reach the center, base integrity drops. If it reaches `0`, the game ends.
+- **Core loop:** Launch and guide your ghost swarm, pass through the glowing **green multiplier zones**, and grow your forces to hold the line.
 
-## 🛠️ Technology Stack
+### Controls
 
-- **Framework:** React / [TanStack Start](https://tanstack.com/start)
-- **3D Rendering:** [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) & [@react-three/drei](https://github.com/pmndrs/drei)
-- **Physics Engine:** [@react-three/rapier](https://github.com/pmndrs/react-three-rapier)
-- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) (including LocalStorage persistence for High Scores)
+- **Shoot / Deploy:** `Space` or `Left Mouse Click`
+- **Steer / Move swarm:** `Mouse Movement` or `Click + Drag`
+
+## 🛠️ Tech Stack
+
+- **Framework:** React + [TanStack Start](https://tanstack.com/start)
+- **3D Rendering:** [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) + [@react-three/drei](https://github.com/pmndrs/drei)
+- **Physics:** [@react-three/rapier](https://github.com/pmndrs/react-three-rapier)
+- **State Management:** [Zustand](https://zustand-demo.pmnd.rs/) (high score persistence via LocalStorage)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **UI Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **Animation:** [Framer Motion](https://www.framer.com/motion/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-Make sure you have Node.js installed. We recommend using `pnpm` as the package manager.
+- Node.js 20+
+- `pnpm`
 
-### Installation & Running Locally
-
-1. Install dependencies:
-
-   ```bash
-   pnpm install
-   ```
-
-2. Start the development server:
-
-   ```bash
-   pnpm dev
-   ```
-
-3. Open your browser and navigate to the local server address (usually `http://localhost:3000`).
-
-### Building for Production
-
-To create an optimized production build:
+### Install
 
 ```bash
-pnpm build
+pnpm install
 ```
 
-## 📂 Project Structure
+### Development
 
-- `src/components/game/` - 3D game entities and scenes (`GameScene.tsx`, `Enemy.tsx`, `Ally.tsx`, `Base.tsx`, `Environment.tsx`).
-- `src/components/ui/` - 2D DOM overlays and UI interfaces (`MainMenu.tsx`, `HUD.tsx`, `GameOverOverlay.tsx`).
-- `src/store/` - Zustand global game state (`gameStore.ts`).
-- `src/routes/` - Application routing (`index.tsx`).
+```bash
+pnpm dev
+```
+
+App runs locally at `http://localhost:3006`.
+
+## 📜 Available Scripts
+
+- `pnpm dev` — Start Vite dev server on port `3006`
+- `pnpm build` — Build production bundle
+- `pnpm preview` — Preview production build on port `3006`
+- `pnpm test` — Run Vitest test suite
+
+## 🗂️ Project Structure
+
+- `src/components/game/` — 3D gameplay entities and scene setup (`GameScene.tsx`, `Enemy.tsx`, `Ally.tsx`, `Base.tsx`, `Environment.tsx`)
+- `src/components/ui/` — 2D overlays and UI (`MainMenu.tsx`, `HUD.tsx`, `GameOverOverlay.tsx`)
+- `src/store/` — Global game state via Zustand (`gameStore.ts`)
+- `src/routes/` — App routes (`index.tsx`)
 
 ---
 
 _Defend the town from the eternal sleep._
 
-**Credits:**
+## Credits
 
 - Assets from **Keenly**
 - Sound from **Zapsplat**
