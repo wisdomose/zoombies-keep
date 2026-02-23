@@ -1,13 +1,14 @@
+import React from "react";
+import type { ThreeEvent } from "@react-three/fiber";
 import { useGameStore, BOUNDARY_X, BOUNDARY_Z } from "../../store/gameStore";
 
-export function Spawner() {
+export const Spawner = React.memo(function Spawner() {
   const spawnAlly = useGameStore((state) => state.spawnAlly);
 
-  const handlePointerDown = (e: any) => {
+  function handlePointerDown(e: ThreeEvent<PointerEvent>) {
     e.stopPropagation();
-    // Spawn roughly where the user clicked on the spawner plane
     spawnAlly([e.point.x, 0.05, e.point.z]);
-  };
+  }
 
   return (
     <mesh
@@ -24,4 +25,4 @@ export function Spawner() {
       />
     </mesh>
   );
-}
+});

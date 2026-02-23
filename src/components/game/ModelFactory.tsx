@@ -2,29 +2,32 @@ import React, { createContext, useContext, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { Group } from "three";
+import type { GLTFResult } from "../../types/gltf";
 
-interface ModelPoolContextType {
+interface ModelFactoryContextType {
   getGhost: () => Group;
   getVampire: () => Group;
   getZombie: () => Group;
 }
 
-const ModelPoolContext = createContext<ModelPoolContextType | null>(null);
+const ModelFactoryContext = createContext<ModelFactoryContextType | null>(null);
 
-export const ModelPoolProvider: React.FC<{ children: React.ReactNode }> = ({
+export function ModelFactoryProvider({
   children,
-}) => {
+}: {
+  children: React.ReactNode;
+}) {
   const ghostGLTF = useGLTF(
     "/assets/Models/GLB%20format/character-ghost.glb",
-  ) as any;
+  ) as GLTFResult;
   const vampireGLTF = useGLTF(
     "/assets/Models/GLB%20format/character-vampire.glb",
-  ) as any;
+  ) as GLTFResult;
   const zombieGLTF = useGLTF(
     "/assets/Models/GLB%20format/character-zombie.glb",
-  ) as any;
+  ) as GLTFResult;
 
-  const pool = useMemo(
+  const factory = useMemo(
     () => ({
       getGhost: () => SkeletonUtils.clone(ghostGLTF.scene) as Group,
       getVampire: () => SkeletonUtils.clone(vampireGLTF.scene) as Group,
@@ -34,18 +37,18 @@ export const ModelPoolProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   return (
-    <ModelPoolContext.Provider value={pool}>
+    <ModelFactoryContext.Provider value={factory}>
       {children}
-    </ModelPoolContext.Provider>
+    </ModelFactoryContext.Provider>
   );
-};
+}
 
-export const useModelPool = () => {
-  const context = useContext(ModelPoolContext);
+export function useModelFactory() {
+  const context = useContext(ModelFactoryContext);
   if (!context)
-    throw new Error("useModelPool must be used within ModelPoolProvider");
+    throw new Error("useModelFactory must be used within ModelFactoryProvider");
   return context;
-};
+}
 
 // Preload all
 useGLTF.preload("/assets/Models/GLB%20format/character-ghost.glb");

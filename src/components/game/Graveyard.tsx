@@ -1,44 +1,35 @@
+import React from "react";
 import { useGLTF } from "@react-three/drei";
+import { getMeshInfo } from "../../utils/gltf";
+import type { GLTFResult } from "../../types/gltf";
 
-export function Graveyard() {
+export const Graveyard = React.memo(function Graveyard() {
   const { nodes: fenceNodes, materials: fenceMaterials } = useGLTF(
     "/assets/Models/GLB%20format/iron-fence.glb",
-  ) as any;
+  ) as GLTFResult;
   const { nodes: gateNodes, materials: gateMaterials } = useGLTF(
     "/assets/Models/GLB%20format/iron-fence-border-gate.glb",
-  ) as any;
+  ) as GLTFResult;
   const { nodes: graveNodes, materials: graveMaterials } = useGLTF(
     "/assets/Models/GLB%20format/grave.glb",
-  ) as any;
+  ) as GLTFResult;
   const { nodes: stoneNodes, materials: stoneMaterials } = useGLTF(
     "/assets/Models/GLB%20format/gravestone-cross.glb",
-  ) as any;
+  ) as GLTFResult;
 
   return (
     <group position={[0, 0, -25]}>
       {/* Central Gate */}
       <group position={[0, 0, 0]} scale={8}>
         <mesh
-          geometry={
-            gateNodes["iron-fence-border-gate"]?.geometry ||
-            (Object.values(gateNodes).find((n: any) => n.geometry) as any)
-              ?.geometry
-          }
-          material={gateMaterials["*"] || Object.values(materials)[0]}
+          {...getMeshInfo(gateNodes, gateMaterials, "iron-fence-border-gate")}
         />
       </group>
 
       {/* Fences */}
       {([-8, -4, 4, 8] as const).map((x, i) => (
         <group key={`fence-${i}`} position={[x, 0, 0]} scale={8}>
-          <mesh
-            geometry={
-              fenceNodes["iron-fence"]?.geometry ||
-              (Object.values(fenceNodes).find((n: any) => n.geometry) as any)
-                ?.geometry
-            }
-            material={fenceMaterials["*"] || Object.values(fenceMaterials)[0]}
-          />
+          <mesh {...getMeshInfo(fenceNodes, fenceMaterials, "iron-fence")} />
         </group>
       ))}
 
@@ -57,14 +48,7 @@ export function Graveyard() {
           rotation={[0, g.rot, 0]}
           scale={6}
         >
-          <mesh
-            geometry={
-              graveNodes["grave"]?.geometry ||
-              (Object.values(graveNodes).find((n: any) => n.geometry) as any)
-                ?.geometry
-            }
-            material={graveMaterials["*"] || Object.values(graveMaterials)[0]}
-          />
+          <mesh {...getMeshInfo(graveNodes, graveMaterials, "grave")} />
         </group>
       ))}
 
@@ -83,21 +67,13 @@ export function Graveyard() {
           scale={6}
         >
           <mesh
-            geometry={
-              stoneNodes["gravestone-cross"]?.geometry ||
-              (Object.values(stoneNodes).find((n: any) => n.geometry) as any)
-                ?.geometry
-            }
-            material={stoneMaterials["*"] || Object.values(stoneMaterials)[0]}
+            {...getMeshInfo(stoneNodes, stoneMaterials, "gravestone-cross")}
           />
         </group>
       ))}
     </group>
   );
-}
-
-// Accessing global variables to avoid linter errors if necessary, though not ideal
-const materials: any = {};
+});
 
 useGLTF.preload("/assets/Models/GLB%20format/iron-fence.glb");
 useGLTF.preload("/assets/Models/GLB%20format/iron-fence-border-gate.glb");

@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, useMemo } from "react";
+import { useEffect, Suspense, useMemo } from "react";
 import { PCFShadowMap, Fog } from "three";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
@@ -12,29 +12,26 @@ import { Enemy } from "./Enemy";
 import { Graveyard } from "./Graveyard";
 import { useGameStore, BOUNDARY_X, BOUNDARY_Z } from "../../store/gameStore";
 import { ContactShadows } from "@react-three/drei";
-import { ModelPoolProvider } from "./ModelPool";
+import { ModelFactoryProvider } from "./ModelFactory";
 
-const SPAWN_DELAY_NORMAL_MS = 1000;
-const SPAWN_DELAY_BOSS_MS = 1800;
-const NORMAL_PHASE_DURATION_MS = 20_000;
-const BOSS_PHASE_DURATION_MS = 10_000;
-const SPEED_INCREMENT_PER_WAVE = 0.2;
-const SPAWN_DELAY_DECAY_RATE = 0.8;
-const MIN_NORMAL_SPAWN_DELAY_MS = 500;
-const MIN_BOSS_SPAWN_DELAY_MS = 1000;
+import {
+  SPAWN_DELAY_NORMAL_MS,
+  SPAWN_DELAY_BOSS_MS,
+  NORMAL_PHASE_DURATION_MS,
+  BOSS_PHASE_DURATION_MS,
+  SPEED_INCREMENT_PER_WAVE,
+  SPAWN_DELAY_DECAY_RATE,
+  MIN_NORMAL_SPAWN_DELAY_MS,
+  MIN_BOSS_SPAWN_DELAY_MS,
+} from "../../constants/game";
 
 export function GameScene() {
   const { allies, enemies, spawnEnemy, status } = useGameStore();
-  const [isClient, setIsClient] = useState(false);
 
   const fog = useMemo(() => new Fog("#050505", 50, 150), []);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isClient || status !== "playing") return;
+    if (status !== "playing") return;
 
     let isRunning = true;
     let waveLevel = 1;
@@ -84,6 +81,8 @@ export function GameScene() {
 
         const delay = inBossPhase ? bossDelay : normalDelay;
         await new Promise<void>((resolve) => setTimeout(resolve, delay));
+
+        if (!isRunning) break;
       }
     }
 
@@ -92,9 +91,7 @@ export function GameScene() {
     return () => {
       isRunning = false;
     };
-  }, [status, spawnEnemy, isClient]);
-
-  if (!isClient) return null;
+  }, [status, spawnEnemy]);
 
   return (
     <Canvas
@@ -109,7 +106,7 @@ export function GameScene() {
       style={{ width: "100%", height: "100%", background: "#050505" }}
     >
       <Suspense fallback={null}>
-        <ModelPoolProvider>
+        <ModelFactoryProvider>
           <primitive object={fog} attach="fog" />
           <ambientLight intensity={1.2} />
           <directionalLight
@@ -144,7 +141,7 @@ export function GameScene() {
               />
             ))}
           </Physics>
-        </ModelPoolProvider>
+        </ModelFactoryProvider>
         <ContactShadows
           position={[0, 0, 0]}
           opacity={0.4}

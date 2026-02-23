@@ -1,6 +1,13 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 
+import {
+    INITIAL_ALLY_STRENGTH,
+    BOSS_INITIAL_STRENGTH_BASE,
+    BOSS_STRENGTH_PER_WAVE,
+    NORMAL_ENEMY_STRENGTH,
+} from '../constants/game'
+
 export interface Ally {
     id: string
     position: [number, number, number]
@@ -37,7 +44,7 @@ interface GameState {
     enemies: Enemy[]
     zones: MultiplierZone[]
     status: 'splash' | 'menu' | 'playing' | 'gameover'
-    exitSplash: () => void
+    dismissSplash: () => void
     spawnAlly: (position: [number, number, number], canMultiply?: boolean) => void
     spawnEnemy: (position: [number, number, number], options?: SpawnEnemyOptions) => void
     removeAlly: (id: string) => void
@@ -63,12 +70,21 @@ function getEnemyScore(enemy: Enemy): number {
 
 function getHighScore(): number {
     if (typeof window === 'undefined') return 0
-    return parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? '0', 10)
+    try {
+        return parseInt(localStorage.getItem(HIGH_SCORE_KEY) ?? '0', 10)
+    } catch (e) {
+        console.warn('Failed to get high score from localStorage', e)
+        return 0
+    }
 }
 
 function saveHighScore(score: number): void {
     if (typeof window !== 'undefined') {
-        localStorage.setItem(HIGH_SCORE_KEY, score.toString())
+        try {
+            localStorage.setItem(HIGH_SCORE_KEY, score.toString())
+        } catch (e) {
+            console.warn('Failed to save high score to localStorage', e)
+        }
     }
 }
 
@@ -86,13 +102,15 @@ export const useGameStore = create<GameState>()(
         status: 'splash',
 
         spawnAlly: (position, canMultiply = true) => set((state) => ({
-            allies: [...state.allies, { id: crypto.randomUUID(), position, strength: 3, canMultiply }]
+            allies: [...state.allies, { id: crypto.randomUUID(), position, strength: INITIAL_ALLY_STRENGTH, canMultiply }]
         })),
 
         spawnEnemy: (position, options) => set((state) => {
             const isBoss = options?.isBoss ?? false
             const waveLevel = options?.waveLevel ?? 1
-            const strength = isBoss ? 10 + (waveLevel - 1) * 5 : 1
+            const strength = isBoss
+                ? BOSS_INITIAL_STRENGTH_BASE + (waveLevel - 1) * BOSS_STRENGTH_PER_WAVE
+                : NORMAL_ENEMY_STRENGTH
 
             return {
                 enemies: [...state.enemies, {
@@ -148,7 +166,7 @@ export const useGameStore = create<GameState>()(
             }
         }),
 
-        exitSplash: () => set((state) => {
+        dismissSplash: () => set((state) => {
             if (state.status === 'splash') {
                 return { status: 'menu' }
             }

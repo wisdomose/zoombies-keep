@@ -1,7 +1,9 @@
+import React from "react";
 import { useGameStore } from "../../store/gameStore";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import { parseEntityId } from "../../utils/collision";
 
-export function MultiplierZones() {
+export const MultiplierZones = React.memo(function MultiplierZones() {
   const zones = useGameStore((state) => state.zones);
   const spawnAlly = useGameStore((state) => state.spawnAlly);
 
@@ -13,12 +15,11 @@ export function MultiplierZones() {
             type="fixed"
             sensor
             onIntersectionEnter={(payload) => {
-              if (payload.other.rigidBodyObject?.name?.startsWith("ally-")) {
-                const allyId = payload.other.rigidBodyObject.name.replace(
-                  "ally-",
-                  "",
-                );
+              const allyId = payload.other.rigidBodyObject?.name
+                ? parseEntityId(payload.other.rigidBodyObject.name, "ally-")
+                : null;
 
+              if (allyId) {
                 // Use getState() to avoid re-rendering the component when allies change
                 const ally = useGameStore
                   .getState()
@@ -49,4 +50,4 @@ export function MultiplierZones() {
       ))}
     </>
   );
-}
+});

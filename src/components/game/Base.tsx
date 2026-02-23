@@ -1,14 +1,18 @@
+import React from "react";
+import { useGLTF } from "@react-three/drei";
 import { useGameStore, BOUNDARY_Z } from "../../store/gameStore";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
-import { useGLTF } from "@react-three/drei";
+import { getMeshInfo } from "../../utils/gltf";
+import { parseEntityId } from "../../utils/collision";
 import { Haptics } from "../../utils/haptics";
+import type { GLTFResult } from "../../types/gltf";
 
-export function Base() {
+export const Base = React.memo(function Base() {
   const damageBase = useGameStore((state) => state.damageBase);
   const removeEnemy = useGameStore((state) => state.removeEnemy);
   const { nodes, materials } = useGLTF(
     "/assets/Models/GLB%20format/crypt.glb",
-  ) as any;
+  ) as GLTFResult;
 
   return (
     <group position={[0, 0, BOUNDARY_Z - 2]}>
@@ -18,14 +22,9 @@ export function Base() {
         colliders="cuboid"
         sensor
         onIntersectionEnter={(payload) => {
-          if (payload.other.rigidBodyObject?.name?.startsWith("enemy-")) {
-            const enemyId = payload.other.rigidBodyObject.name.replace(
-              "enemy-",
-              "",
-            );
-            console.log(
-              `Enemy ${enemyId} reached base! Dealing damage and removing.`,
-            );
+          const name = payload.other.rigidBodyObject?.name;
+          const enemyId = name ? parseEntityId(name, "enemy-") : null;
+          if (enemyId) {
             damageBase(10);
             Haptics.heavy();
             removeEnemy(enemyId, false); // No points for enemies reaching base
@@ -37,16 +36,12 @@ export function Base() {
           <mesh
             castShadow
             receiveShadow
-            geometry={
-              nodes["crypt"]?.geometry ||
-              (Object.values(nodes) as any[]).find((n) => n.geometry)?.geometry
-            }
-            material={materials["*"] || Object.values(materials)[0]}
+            {...getMeshInfo(nodes, materials, "crypt")}
           />
         </group>
       </RigidBody>
     </group>
   );
-}
+});
 
 useGLTF.preload("/assets/Models/GLB%20format/crypt.glb");

@@ -1,7 +1,8 @@
+import React from "react";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { BOUNDARY_X, BOUNDARY_Z } from "../../store/gameStore";
 
-export function Environment() {
+export const Environment = React.memo(function Environment() {
   return (
     <>
       {/* Ground Plane */}
@@ -33,4 +34,4 @@ export function Environment() {
       </RigidBody>
     </>
   );
-}
+});

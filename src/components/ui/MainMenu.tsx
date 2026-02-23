@@ -3,6 +3,89 @@ import { useGameStore } from "../../store/gameStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, BookOpen, Trophy, X } from "lucide-react";
 
+function InstructionsModal({ onClose }: { onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-110 flex items-center justify-center bg-black/80 backdrop-blur-xl p-4"
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="w-full max-w-lg bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl relative"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 rounded-full bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <h2 className="text-3xl font-black text-white mb-6 flex items-center gap-3 tracking-tight italic">
+          <BookOpen className="w-8 h-8 text-purple-500" />
+          MISSION INTEL
+        </h2>
+
+        <div className="space-y-6 text-zinc-300">
+          <section>
+            <h3 className="text-zinc-500 font-black mb-2 flex items-center gap-2 uppercase text-[10px] tracking-widest">
+              Objective
+            </h3>
+            <p className="text-sm leading-relaxed">
+              Stop the vampires from reaching the Town Center. Each vampire that
+              enters the crypt damages the town's integrity.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="text-zinc-500 font-black mb-2 flex items-center gap-2 uppercase text-[10px] tracking-widest">
+              Multiplying
+            </h3>
+            <p className="text-sm leading-relaxed">
+              Guide your ghosts through the{" "}
+              <span className="text-green-400 font-bold italic">
+                Green Zones
+              </span>{" "}
+              to multiply their numbers. A larger swarm can take down more
+              vampires.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="text-zinc-500 font-black mb-2 flex items-center gap-2 uppercase text-[10px] tracking-widest">
+              Controls
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800">
+                <span className="block text-[10px] font-black text-zinc-600 mb-1 uppercase tracking-widest">
+                  Shoot
+                </span>
+                <span className="text-white font-bold">Space / Click</span>
+              </div>
+              <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800">
+                <span className="block text-[10px] font-black text-zinc-600 mb-1 uppercase tracking-widest">
+                  Movement
+                </span>
+                <span className="text-white font-bold">Mouse / Drag</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <button
+          onClick={onClose}
+          className="w-full mt-8 py-4 bg-purple-600 text-white font-bold rounded-2xl hover:bg-purple-500 transition-all active:scale-95 shadow-lg shadow-purple-500/20"
+        >
+          UNDERSTOOD
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function MainMenu() {
   const { highScore, startGame } = useGameStore();
   const [showInstructions, setShowInstructions] = useState(false);
@@ -69,86 +152,7 @@ export function MainMenu() {
 
       <AnimatePresence>
         {showInstructions && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-110 flex items-center justify-center bg-black/80 backdrop-blur-xl p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-lg bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl relative"
-            >
-              <button
-                onClick={() => setShowInstructions(false)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <h2 className="text-3xl font-black text-white mb-6 flex items-center gap-3 tracking-tight italic">
-                <BookOpen className="w-8 h-8 text-purple-500" />
-                MISSION INTEL
-              </h2>
-
-              <div className="space-y-6 text-zinc-300">
-                <section>
-                  <h3 className="text-zinc-500 font-black mb-2 flex items-center gap-2 uppercase text-[10px] tracking-widest">
-                    Objective
-                  </h3>
-                  <p className="text-sm leading-relaxed">
-                    Stop the vampires from reaching the Town Center. Each
-                    vampire that enters the crypt damages the town's integrity.
-                  </p>
-                </section>
-
-                <section>
-                  <h3 className="text-zinc-500 font-black mb-2 flex items-center gap-2 uppercase text-[10px] tracking-widest">
-                    Multiplying
-                  </h3>
-                  <p className="text-sm leading-relaxed">
-                    Guide your ghosts through the{" "}
-                    <span className="text-green-400 font-bold italic">
-                      Green Zones
-                    </span>{" "}
-                    to multiply their numbers. A larger swarm can take down more
-                    vampires.
-                  </p>
-                </section>
-
-                <section>
-                  <h3 className="text-zinc-500 font-black mb-2 flex items-center gap-2 uppercase text-[10px] tracking-widest">
-                    Controls
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800">
-                      <span className="block text-[10px] font-black text-zinc-600 mb-1 uppercase tracking-widest">
-                        Shoot
-                      </span>
-                      <span className="text-white font-bold">
-                        Space / Click
-                      </span>
-                    </div>
-                    <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-800">
-                      <span className="block text-[10px] font-black text-zinc-600 mb-1 uppercase tracking-widest">
-                        Movement
-                      </span>
-                      <span className="text-white font-bold">Mouse / Drag</span>
-                    </div>
-                  </div>
-                </section>
-              </div>
-
-              <button
-                onClick={() => setShowInstructions(false)}
-                className="w-full mt-8 py-4 bg-purple-600 text-white font-bold rounded-2xl hover:bg-purple-500 transition-all active:scale-95 shadow-lg shadow-purple-500/20"
-              >
-                UNDERSTOOD
-              </button>
-            </motion.div>
-          </motion.div>
+          <InstructionsModal onClose={() => setShowInstructions(false)} />
         )}
       </AnimatePresence>
     </div>

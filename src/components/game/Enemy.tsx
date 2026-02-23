@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useEffect } from "react";
+import React, { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
   RigidBody,
@@ -7,14 +7,18 @@ import {
 } from "@react-three/rapier";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useGameStore } from "../../store/gameStore";
-import { useModelPool } from "./ModelPool";
+import { useModelFactory } from "./ModelFactory";
+import { useWalkAnimation } from "../../hooks/useWalkAnimation";
+import { parseEntityId } from "../../utils/collision";
 import { Haptics } from "../../utils/haptics";
 import { AudioUtils } from "../../utils/audio";
-
-const MOVE_SPEED = 6;
-const REACH_Z = 30;
-const FALL_Y = -5;
-const ALLY_DAMAGE = 3;
+import {
+  ENEMY_MOVE_SPEED,
+  ENEMY_REACH_Z,
+  ENTITY_FALL_Y,
+  ALLY_DAMAGE_TO_ENEMY,
+} from "../../constants/game";
+import type { GLTFResult } from "../../types/gltf";
 
 const NORMAL_MODEL = "/assets/Models/GLB%20format/character-vampire.glb";
 const BOSS_MODEL = "/assets/Models/GLB%20format/character-zombie.glb";
@@ -44,43 +48,36 @@ export const Enemy = React.memo(function Enemy({
 }) {
   const rbRef = useRef<RapierRigidBody>(null);
   const { removeEnemy, damageEnemy, damageAlly } = useGameStore();
-  const pool = useModelPool();
+  const factory = useModelFactory();
 
-  const { animations } = useGLTF(isBoss ? BOSS_MODEL : NORMAL_MODEL) as any;
+  const { animations } = useGLTF(
+    isBoss ? BOSS_MODEL : NORMAL_MODEL,
+  ) as GLTFResult;
 
   const clone = useMemo(() => {
-    return isBoss ? pool.getZombie() : pool.getVampire();
-  }, [pool, isBoss]);
+    return isBoss ? factory.getZombie() : factory.getVampire();
+  }, [factory, isBoss]);
 
   const { actions, names } = useAnimations(animations, clone);
 
-  useEffect(() => {
-    const walkAnim =
-      names.find((n) => n.toLowerCase().includes("walk")) ?? names[0];
-    if (walkAnim && actions[walkAnim]) {
-      actions[walkAnim].reset().fadeIn(0.2).play();
-    }
-    return () => {
-      if (walkAnim && actions[walkAnim]) actions[walkAnim]?.fadeOut(0.2);
-    };
-  }, [actions, names]);
+  useWalkAnimation(actions, names);
 
   useFrame(() => {
     if (!rbRef.current) return;
 
     rbRef.current.setLinvel(
-      { x: 0, y: 0, z: MOVE_SPEED * speedMultiplier },
+      { x: 0, y: 0, z: ENEMY_MOVE_SPEED * speedMultiplier },
       true,
     );
 
     const pos = rbRef.current.translation();
-    if (pos.z > REACH_Z || pos.y < FALL_Y) {
+    if (pos.z > ENEMY_REACH_Z || pos.y < ENTITY_FALL_Y) {
       removeEnemy(id);
     }
   });
 
   function handleAllyHit(allyId: string) {
-    damageAlly(allyId, ALLY_DAMAGE);
+    damageAlly(allyId, ALLY_DAMAGE_TO_ENEMY);
     if (isBoss) {
       damageEnemy(id, 1);
     } else {
@@ -100,9 +97,10 @@ export const Enemy = React.memo(function Enemy({
       lockRotations
       onCollisionEnter={({ other }) => {
         const name = other.rigidBodyObject?.name;
-        if (name?.startsWith("ally-")) {
+        const allyId = name ? parseEntityId(name, "ally-") : null;
+        if (allyId) {
           Haptics.light();
-          handleAllyHit(name.replace("ally-", ""));
+          handleAllyHit(allyId);
         } else if (name?.startsWith("enemy-")) {
           AudioUtils.playBump();
         }

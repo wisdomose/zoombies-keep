@@ -5,7 +5,7 @@ import { useProgress } from "@react-three/drei";
 import { AudioUtils } from "../../utils/audio";
 
 export function SplashScreen() {
-  const exitSplash = useGameStore((state) => state.exitSplash);
+  const dismissSplash = useGameStore((state) => state.dismissSplash);
   const { progress, active } = useProgress();
 
   const isLoading = active || progress < 100;
@@ -18,7 +18,7 @@ export function SplashScreen() {
       onClick={() => {
         if (!isLoading) {
           AudioUtils.playTheme();
-          exitSplash();
+          dismissSplash();
         }
       }}
       className={`fixed inset-0 z-200 flex flex-col items-center justify-center bg-[#050505] p-6 overflow-hidden select-none transition-all duration-700 ${
